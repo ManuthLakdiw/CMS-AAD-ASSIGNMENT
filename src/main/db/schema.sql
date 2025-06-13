@@ -5,8 +5,8 @@ use CMS;
 CREATE TABLE user (
             id varchar(10) PRIMARY KEY,
             name VARCHAR(100),
-            email VARCHAR(100) UNIQUE,
-            user_name VARCHAR(50) UNIQUE,
+            email VARCHAR(100),
+            user_name VARCHAR(50),
             password VARCHAR(100),
             role VARCHAR(20)
 );
