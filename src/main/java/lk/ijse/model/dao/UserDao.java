@@ -27,7 +27,8 @@ public class UserDao extends HttpServlet {
                 userBean.getEmail(),
                 userBean.getUserName(),
                 userBean.getPassword(),
-                userBean.getRole());
+                userBean.getRole()
+        );
     }
 
     public UserBean getUser(String id) throws SQLException {
