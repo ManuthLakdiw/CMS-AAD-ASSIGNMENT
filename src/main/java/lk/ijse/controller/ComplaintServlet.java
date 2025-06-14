@@ -52,7 +52,10 @@ public class ComplaintServlet extends HttpServlet {
             boolean isSaved = complaintDao.saveComplaint(complaintBean);
             if(isSaved){
                 req.setAttribute("message", "Complaint has been Submitted Successfully!");
-                req.getRequestDispatcher("/view/complaint.jsp").forward(req, resp);
+                req.getRequestDispatcher("/view/employeeDashBoard.jsp").forward(req, resp);
+            }else {
+                req.setAttribute("message", "Complaint has not been Submitted Successfully!");
+                req.getRequestDispatcher("/view/employeeDashBoard.jsp").forward(req, resp);
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
