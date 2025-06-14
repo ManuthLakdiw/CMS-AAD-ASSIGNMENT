@@ -22,14 +22,15 @@ public class CrudUtil {
 
     static {
         try {
-            InitialContext context = new InitialContext();
+            InitialContext context
+                    = new InitialContext();
             dataSource = (DataSource) context.lookup("java:comp/env/jdbc/pool");
         } catch (NamingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    
+
     public static <T>T execute(String sql, Object...obj) throws SQLException {
         Connection connection = dataSource.getConnection();
 
