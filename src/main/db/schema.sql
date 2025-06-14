@@ -12,15 +12,15 @@ CREATE TABLE user (
 );
 
 
-CREATE TABLE employee(
+CREATE TABLE complaint(
     id varchar(10) PRIMARY KEY,
-    user_id     varchar(10),
+    employee_id     varchar(10),
     title       VARCHAR(200),
     description text,
     date        DATE,
     time        TIME,
     status      VARCHAR(50),
-    FOREIGN KEY (user_id) REFERENCES user (id)
+    FOREIGN KEY (employee_id) REFERENCES user (id)
 );
 
 
