@@ -5,6 +5,8 @@ import util.CrudUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -40,6 +42,43 @@ public class ComplaintDao {
             complaintBean.setStatus(resultSet.getString(6));
             complaintBean.setEmployeeId(resultSet.getString(7));
             return Optional.of(complaintBean);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<List<ComplaintBean>> getComplaintByEmployeeId(String employeeId) throws SQLException {
+        List<ComplaintBean> complaintBeans = new ArrayList<>();
+        ResultSet resultSet = CrudUtil.execute("SELECT * FROM complaint WHERE employee_id = ?", employeeId);
+        while (resultSet.next()) {
+            ComplaintBean complaintBean = new ComplaintBean();
+
+            complaintBean.setId(resultSet.getString(1));
+            complaintBean.setTitle(resultSet.getString(2));
+            complaintBean.setDescription(resultSet.getString(3));
+            complaintBean.setDate(resultSet.getDate(4).toLocalDate());
+            complaintBean.setTime(resultSet.getTime(5).toLocalTime());
+            complaintBean.setStatus(resultSet.getString(6));
+            complaintBean.setEmployeeId(resultSet.getString(7));
+            complaintBeans.add(complaintBean);
+            return Optional.of(complaintBeans);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<List<ComplaintBean>> getAllComplaints() throws SQLException {
+        List<ComplaintBean> complaintBeans = new ArrayList<>();
+        ResultSet resultSet = CrudUtil.execute("SELECT * FROM complaint");
+        while (resultSet.next()) {
+            ComplaintBean complaintBean = new ComplaintBean();
+            complaintBean.setId(resultSet.getString(1));
+            complaintBean.setTitle(resultSet.getString(2));
+            complaintBean.setDescription(resultSet.getString(3));
+            complaintBean.setDate(resultSet.getDate(4).toLocalDate());
+            complaintBean.setTime(resultSet.getTime(5).toLocalTime());
+            complaintBean.setStatus(resultSet.getString(6));
+            complaintBean.setEmployeeId(resultSet.getString(7));
+            complaintBeans.add(complaintBean);
+            return Optional.of(complaintBeans);
         }
         return Optional.empty();
     }
