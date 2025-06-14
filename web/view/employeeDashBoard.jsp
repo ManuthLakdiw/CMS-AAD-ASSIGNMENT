@@ -2,6 +2,8 @@
 <%@ page import="java.time.LocalDateTime" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="lk.ijse.model.bean.UserBean" %>
+
+
 <%
     UserBean userBean = (UserBean) session.getAttribute("user");
     if (userBean == null) {
@@ -12,28 +14,9 @@
     String currentDateTime = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("E, MMM dd yyyy"));
 %>
 
-<%
-    String message = (String) request.getAttribute("message");
-%>
 
-<script>
-    <% if (message != null) { %>
-    swal({
-        title: "Success!",
-        text: "<%= message %>",
-        icon: "success",
-        timer: 1300,
-        buttons: false
-    });
-    <% } else { %>
-    swal({
-        title: "Error!",
-        text: "Complaint submission failed. Please try again.",
-        icon: "error",
-        button: "OK"
-    });
-    <% } %>
-</script>
+
+
 
 
 <!DOCTYPE html>
@@ -46,6 +29,36 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body class="bg-gray-50">
+
+<%
+    String message = (String) request.getAttribute("message");
+
+    if (message != null) {
+        if (message.contentEquals("NOT")) {
+%>
+<script>
+    swal({
+        title: "Error!",
+        text: "<%= message %>",
+        icon: "error",
+        button: "OK"
+    });
+</script>
+<%
+} else {
+%>
+<script>
+    swal({
+        title: "Success!",
+        text: "<%= message %>",
+        icon: "success",
+        timer: 1600,
+        buttons: false
+    });
+</script>
+<%}
+    }
+%>
 
 
 
@@ -134,5 +147,6 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
+
 </body>
 </html>
