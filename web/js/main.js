@@ -16,6 +16,24 @@ $(document).ready(function(){
         }
     })
 
+    $(".logoutForm").on("submit", function(e){
+        e.preventDefault();
+
+        swal({
+            title: "Are you sure?",
+            text: "Do you really want to logout?",
+            icon: "warning",
+            buttons: ["No", "Yes"],
+            dangerMode: true,
+        }).then((willLogout) => {
+            if (willLogout) {
+                this.submit();
+            }
+        });
+    })
+
+
+
 
 
 });
