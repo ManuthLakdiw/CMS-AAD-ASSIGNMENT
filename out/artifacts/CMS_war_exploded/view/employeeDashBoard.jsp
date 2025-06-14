@@ -2,6 +2,8 @@
 <%@ page import="java.time.LocalDateTime" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="lk.ijse.model.bean.UserBean" %>
+
+
 <%
     UserBean userBean = (UserBean) session.getAttribute("user");
     if (userBean == null) {
@@ -11,6 +13,11 @@
 
     String currentDateTime = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("E, MMM dd yyyy"));
 %>
+
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,6 +29,36 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" integrity="sha512-dPXYcDub/aeb08c63jRq/k6GaKccl256JQy/AnOq7CAnEZ9FzSL9wSbcZkMp4R26vBsMLFYH4kQ67/bbV8XaCQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body class="bg-gray-50">
+
+<%
+    String message = (String) request.getAttribute("message");
+
+    if (message != null) {
+        if (message.contentEquals("NOT")) {
+%>
+<script>
+    swal({
+        title: "Error!",
+        text: "<%= message %>",
+        icon: "error",
+        button: "OK"
+    });
+</script>
+<%
+} else {
+%>
+<script>
+    swal({
+        title: "Success!",
+        text: "<%= message %>",
+        icon: "success",
+        timer: 1600,
+        buttons: false
+    });
+</script>
+<%}
+    }
+%>
 
 
 
@@ -54,6 +91,7 @@
     <div class="bg-white p-6 rounded-lg shadow mb-6">
         <h2 class="text-xl font-bold mb-4 text-blue-700">Add New Complaint</h2>
         <form action="<%= request.getContextPath() %>/complaint" method="post" class="space-y-4">
+            <input type="hidden" name="employeeId" value="<%= userBean.getId() %>">
             <div>
                 <label class="block text-sm font-medium mb-1">Complaint Title</label>
                 <input type="text" name="title" class="w-full border rounded px-3 py-2" required>
@@ -109,5 +147,6 @@
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
+
 </body>
 </html>
