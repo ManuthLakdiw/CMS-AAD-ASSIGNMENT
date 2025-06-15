@@ -54,7 +54,7 @@ $(document).ready(function(){
             dangerMode: true,
         }).then((willDelete) => {
             if (willDelete) {
-                form.submit(); // form එක manually submit කරනවා
+                form.submit();
             }
         });
     });
