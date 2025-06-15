@@ -32,6 +32,35 @@ $(document).ready(function(){
         });
     })
 
+    $(".deleteComplaint").on("submit", function (e) {
+        e.preventDefault();
+
+        const form = this;
+
+        swal({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            buttons: {
+                cancel: "Cancel",
+                confirm: {
+                    text: "Yes, delete it!",
+                    value: true,
+                    visible: true,
+                    className: "bg-red-600 text-white px-3 py-2 rounded",
+                    closeModal: true
+                }
+            },
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                form.submit(); // form එක manually submit කරනවා
+            }
+        });
+    });
+
+
+
 
 
 
