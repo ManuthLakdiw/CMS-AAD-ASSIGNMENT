@@ -46,48 +46,101 @@ public class ComplaintServlet extends HttpServlet {
 
 
 
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String title = req.getParameter("title");
-        String description = req.getParameter("description");
-        LocalDate date = LocalDate.now();
-        LocalTime time = LocalTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        String formattedTime = time.format(formatter);
-        String status = "Pending";
-        String employeeId = req.getParameter("employeeId");
+
+        String action = req.getParameter("action");
+
+        if(action.equalsIgnoreCase("ADD")){
+            String title = req.getParameter("title");
+            String description = req.getParameter("description");
+            LocalDate date = LocalDate.now();
+            LocalTime time = LocalTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            String formattedTime = time.format(formatter);
+            String status = "Pending";
+            String employeeId = req.getParameter("employeeId");
 
 
-        try {
-            String complaintID = complaintDao.generateNewComplaintId();
-            ComplaintBean complaintBean = new ComplaintBean();
-            complaintBean.setId(complaintID);
-            complaintBean.setTitle(title);
-            complaintBean.setDescription(description);
-            complaintBean.setDate(date);
-            complaintBean.setTime(LocalTime.parse(formattedTime));
-            complaintBean.setStatus(status);
-            complaintBean.setEmployeeId(employeeId);
+            try {
+                String complaintID = complaintDao.generateNewComplaintId();
+                ComplaintBean complaintBean = new ComplaintBean();
+                complaintBean.setId(complaintID);
+                complaintBean.setTitle(title);
+                complaintBean.setDescription(description);
+                complaintBean.setDate(date);
+                complaintBean.setTime(LocalTime.parse(formattedTime));
+                complaintBean.setStatus(status);
+                complaintBean.setEmployeeId(employeeId);
 
-            boolean isSaved = complaintDao.saveComplaint(complaintBean);
-            if(isSaved){
-                req.getSession().setAttribute("message", "Complaint has been Submitted Successfully!");
-                resp.sendRedirect(req.getContextPath() + "/complaint");
+                boolean isSaved = complaintDao.saveComplaint(complaintBean);
+                if(isSaved){
+                    req.getSession().setAttribute("message", "Complaint has been Submitted Successfully!");
+                    resp.sendRedirect(req.getContextPath() + "/complaint");
 
-            }else {
-                req.getSession().setAttribute("message", "Complaint has been Submitted Successfully!");
-                req.getRequestDispatcher("/view/employeeDashBoard.jsp").forward(req, resp);
+                }else {
+                    req.getSession().setAttribute("message", "Complaint has not been Submitted Successfully!");
+                    req.getRequestDispatcher("/view/employeeDashBoard.jsp").forward(req, resp);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        }else if(action.equalsIgnoreCase("UPDATE")) {
+            String complaintId = req.getParameter("id");
+            String title = req.getParameter("title");
+            String description = req.getParameter("description");
+            LocalDate date = LocalDate.now();
+            LocalTime time = LocalTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+            String formattedTime = time.format(formatter);
+            String status = "Pending";
+            String employeeId = req.getParameter("employeeId");
+
+
+            try {
+                ComplaintBean complaintBean = new ComplaintBean();
+                complaintBean.setId(complaintId);
+                complaintBean.setTitle(title);
+                complaintBean.setDescription(description);
+                complaintBean.setDate(date);
+                complaintBean.setTime(LocalTime.parse(formattedTime));
+                complaintBean.setStatus(status);
+                complaintBean.setEmployeeId(employeeId);
+                boolean isUpdated = complaintDao.updateComplaint(complaintBean);
+                if(isUpdated){
+                    req.getSession().setAttribute("message", "Complaint has been Updated Successfully!");
+                    resp.sendRedirect(req.getContextPath() + "/complaint");
+
+                }else {
+                    req.getSession().setAttribute("message", "Complaint has not been Updated Successfully!");
+                    req.getRequestDispatcher("/view/employeeDashBoard.jsp").forward(req, resp);
+                }
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }else if(action.equalsIgnoreCase("DELETE")){
+            String complaintId = req.getParameter("id");
+
+            try {
+                boolean isDeleted = complaintDao.deleteComplaint(complaintId);
+                if(isDeleted){
+                    req.getSession().setAttribute("message", "Complaint has been Deleted Successfully!");
+                    resp.sendRedirect(req.getContextPath() + "/complaint");
+                }else {
+                    req.getSession().setAttribute("message", "Complaint has not been Deleted Successfully!");
+                    req.getRequestDispatcher("/view/employeeDashBoard.jsp").forward(req, resp);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
+
 
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("Get Method Called : ComplaintServlet");
         UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 
         if (userBean == null) {
@@ -95,20 +148,35 @@ public class ComplaintServlet extends HttpServlet {
             return;
         }
 
+        String action = req.getParameter("action");
+
         try {
+            // EDIT action handling
+            if ("edit".equalsIgnoreCase(action)) {  // here lowercase edit to match your links/buttons
+                String complaintId = req.getParameter("id");
+                if (complaintId != null) {
+                    Optional<ComplaintBean> complaint = complaintDao.getComplaint(complaintId);
+                    if (!complaint.isPresent()) {
+                        req.setAttribute("message", "Invalid complaint id");
+                        req.getRequestDispatcher("/view/employeeDashBoard.jsp").forward(req, resp);
+                        return;
+                    }
+                    req.setAttribute("complaint", complaint.get());  // pass actual ComplaintBean object
+                }
+            }
+
             Optional<List<ComplaintBean>> complaintBeanList = complaintDao.getComplaintByEmployeeId(userBean.getId());
             if (complaintBeanList.isPresent()) {
-                System.out.println("Complaint list size: " + complaintBeanList.get().size());
                 req.setAttribute("complaintBeanList", complaintBeanList.get());
             } else {
                 req.setAttribute("complaintBeanList", null);
             }
+
             req.getRequestDispatcher("/view/employeeDashBoard.jsp").forward(req, resp);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
-
     }
+
 }
