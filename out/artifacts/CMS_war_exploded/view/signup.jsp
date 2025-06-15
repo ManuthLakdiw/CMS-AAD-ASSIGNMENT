@@ -26,7 +26,7 @@
         text: "<%= message %>",
         icon: "success",
         button: false,
-        timer: 1500,  // 3 seconds display
+        timer: 1500,
         closeOnClickOutside: false,
         successMode: true,
     }).then(function () {
