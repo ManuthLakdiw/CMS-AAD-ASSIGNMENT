@@ -1,5 +1,7 @@
 package lk.ijse.controller;
 
+import jakarta.annotation.Resource;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -7,8 +9,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lk.ijse.model.bean.UserBean;
 import lk.ijse.model.dao.UserDao;
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.mindrot.jbcrypt.BCrypt;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -21,7 +25,15 @@ import java.sql.SQLException;
 @WebServlet("/signup")
 public class SignUpServlet extends HttpServlet {
 
-    UserDao userDao = new UserDao();
+    private UserDao userDao;
+
+    @Override
+    public void init() throws ServletException {
+        ServletContext servletContext = getServletContext();
+        BasicDataSource dataSource = (BasicDataSource) servletContext.getAttribute("dataSource");
+        userDao = new UserDao(dataSource);
+
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
