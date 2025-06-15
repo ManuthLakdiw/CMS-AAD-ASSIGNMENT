@@ -56,12 +56,12 @@ public class ComplaintDao {
                 ComplaintBean complaintBean = new ComplaintBean();
 
                 complaintBean.setId(resultSet.getString(1));
-                complaintBean.setTitle(resultSet.getString(2));
-                complaintBean.setDescription(resultSet.getString(3));
-                complaintBean.setDate(resultSet.getDate(4).toLocalDate());
-                complaintBean.setTime(resultSet.getTime(5).toLocalTime());
-                complaintBean.setStatus(resultSet.getString(6));
-                complaintBean.setEmployeeId(resultSet.getString(7));
+                complaintBean.setTitle(resultSet.getString(3));
+                complaintBean.setDescription(resultSet.getString(4));
+                complaintBean.setDate(resultSet.getDate(5).toLocalDate());
+                complaintBean.setTime(resultSet.getTime(6).toLocalTime());
+                complaintBean.setStatus(resultSet.getString(7));
+                complaintBean.setEmployeeId(resultSet.getString(2));
                 return Optional.of(complaintBean);
             }
             return Optional.empty();
