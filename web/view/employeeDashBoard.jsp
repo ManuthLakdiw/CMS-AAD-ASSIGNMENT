@@ -81,7 +81,7 @@
 
 
 <div class="bg-blue-600 text-white px-6 py-4 flex justify-between items-center shadow-md">
-    <div class="text-lg font-semibold">Complaint Management System</div>
+    <div class="text-lg font-semibold">Complaint Management System - Employee</div>
 
     <div class="flex items-center space-x-8">
         <!-- User icon with username -->
@@ -159,14 +159,22 @@
                 <td class="border px-4 py-2"><%=complaintBean.getDate()%></td>
                 <td class="border px-4 py-2"><%=complaintBean.getTime()%></td>
 
-                <%
-                    String status = complaintBean.getStatus();
+                <%  String status = complaintBean.getStatus();
                     if (status.equalsIgnoreCase("PENDING")) {
                 %>
                 <td class="border px-4 py-2 text-amber-600">
                     <div class="flex items-center">
                         <span><%= status %></span>
                         <i class="bi bi-clock text-amber-600 font-extrabold text-sm ml-2"></i>
+                    </div>
+                </td>
+                <%
+                } else if (status.equalsIgnoreCase("IN PROGRESS")) {
+                %>
+                <td class="border px-4 py-2 text-blue-600">
+                    <div class="flex items-center">
+                        <span><%= status %></span>
+                        <i class="bi bi-hourglass-split text-blue-600 font-extrabold text-sm ml-2"></i>
                     </div>
                 </td>
                 <%
@@ -191,16 +199,23 @@
                 } else {
                 %>
                 <td class="border px-4 py-2 text-gray-600"><%= status %></td>
-                <% } %>
+                <%
+                    }
+                %>
+
 
 
             <%-- <td class="border px-4 py-2 text-amber-600">Pending<i class="bi bi-clock text-amber-600 font-extrabold font-sm ml-2"></i></td>--%>
                 <td class="border px-4 py-2 space-x-2 flex items-center">
                     <% if (!status.equalsIgnoreCase("RESOLVED")) { %>
 
-                    <a href="<%= request.getContextPath() %>/complaint?action=edit&id=<%= complaintBean.getId() %>"
-                       title="Update"
-                       class="inline-flex items-center justify-center w-10 h-10 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-semibold rounded-md shadow-md transition-all duration-200">
+                    <a
+                            href="<%= status.equalsIgnoreCase("IN PROGRESS") ? '#' : request.getContextPath() + "/complaint?action=edit&id=" + complaintBean.getId() %>"
+                            title="<%= status.equalsIgnoreCase("IN PROGRESS") ? "Update Disabled" : "Update" %>"
+                            class="inline-flex items-center justify-center w-10 h-10 font-semibold rounded-md shadow-md transition-all duration-200
+                   <%= status.equalsIgnoreCase("IN PROGRESS") ? "bg-gray-400 cursor-not-allowed text-white" : "bg-blue-600 hover:bg-blue-700 text-white focus:ring-4 focus:ring-blue-300" %>"
+                            onclick="<%= status.equalsIgnoreCase("IN PROGRESS") ? "return false;" : "" %>">
+
                         <i class="fas fa-edit text-sm"></i>
                     </a>
 
@@ -216,6 +231,7 @@
                     <% } else { %>
                     <span class="text-gray-400 italic">Read-only</span>
                     <% } %>
+
                 </td>
 
 
