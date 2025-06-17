@@ -69,7 +69,7 @@ public class SignInServlet extends HttpServlet {
 //                        resp.sendRedirect(req.getContextPath() + "/view/employeeDashBoard.jsp");
                         resp.sendRedirect(req.getContextPath() + "/complaint");
                     } else {
-                        resp.sendRedirect(req.getContextPath() + "/view/adminDashboard.jsp");
+                        resp.sendRedirect(req.getContextPath() + "/complaint");
                     }
                 } else {
                     req.setAttribute("message", "Invalid Credentials");
