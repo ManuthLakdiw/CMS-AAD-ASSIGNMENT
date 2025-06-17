@@ -100,12 +100,12 @@ public class ComplaintDao {
             while (resultSet.next()) {
                 ComplaintBean complaintBean = new ComplaintBean();
                 complaintBean.setId(resultSet.getString(1));
-                complaintBean.setTitle(resultSet.getString(2));
-                complaintBean.setDescription(resultSet.getString(3));
-                complaintBean.setDate(resultSet.getDate(4).toLocalDate());
-                complaintBean.setTime(resultSet.getTime(5).toLocalTime());
-                complaintBean.setStatus(resultSet.getString(6));
-                complaintBean.setEmployeeId(resultSet.getString(7));
+                complaintBean.setTitle(resultSet.getString(3));
+                complaintBean.setDescription(resultSet.getString(4));
+                complaintBean.setDate(resultSet.getDate(5).toLocalDate());
+                complaintBean.setTime(resultSet.getTime(6).toLocalTime());
+                complaintBean.setStatus(resultSet.getString(7));
+                complaintBean.setEmployeeId(resultSet.getString(2));
                 complaintBeans.add(complaintBean);
             }
             return Optional.ofNullable(complaintBeans);
@@ -174,6 +174,14 @@ public class ComplaintDao {
             return "CMP00-001";
         }
     }
+
+
+   public boolean updateComplaintStatus(String complaintId, String status) throws SQLException {
+        try (Connection connection = dataSource.getConnection()) {
+            return CrudUtil.execute(connection, "UPDATE complaint SET status = ? WHERE id = ?", status, complaintId);
+        }
+
+   }
 
 
 
