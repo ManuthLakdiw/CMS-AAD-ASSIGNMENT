@@ -134,6 +134,25 @@ public class ComplaintServlet extends HttpServlet {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+        }else if(action.equalsIgnoreCase("RESOLVE")){
+            String complaintId = req.getParameter("id");
+            String newStatus = req.getParameter("answer");
+
+            try {
+                boolean isUpdated = complaintDao.updateComplaintStatus(complaintId,newStatus);
+                if(isUpdated){
+                    req.getSession().setAttribute("message", "Submitted");
+                    resp.sendRedirect(req.getContextPath() + "/complaint");
+                }else {
+                    req.getSession().setAttribute("message", "Error Occurred");
+                    resp.sendRedirect(req.getContextPath() + "/complaint");
+                }
+
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+
         }
 
 
@@ -141,6 +160,7 @@ public class ComplaintServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("Method Called : ComplaintServlet do get");
         UserBean userBean = (UserBean) req.getSession().getAttribute("user");
 
         if (userBean == null) {
@@ -148,31 +168,47 @@ public class ComplaintServlet extends HttpServlet {
             return;
         }
 
+        String role = userBean.getRole();
         String action = req.getParameter("action");
 
         try {
-            // EDIT action handling
-            if ("edit".equalsIgnoreCase(action)) {  // here lowercase edit to match your links/buttons
-                String complaintId = req.getParameter("id");
-                if (complaintId != null) {
-                    Optional<ComplaintBean> complaint = complaintDao.getComplaint(complaintId);
-                    if (!complaint.isPresent()) {
-                        req.setAttribute("message", "Invalid complaint id");
-                        req.getRequestDispatcher("/view/employeeDashBoard.jsp").forward(req, resp);
-                        return;
-                    }
-                    req.setAttribute("complaint", complaint.get());  // pass actual ComplaintBean object
+
+            System.out.println(role);
+
+            if (role.equalsIgnoreCase("ADMIN")) {
+                Optional<List<ComplaintBean>> allComplaints = complaintDao.getAllComplaints();
+                if (allComplaints.isEmpty()) {
+                    req.setAttribute("message", "No Complaints found");
+                    req.getRequestDispatcher("/view/adminDashboard.jsp").forward(req, resp);
+                    return;
                 }
+                req.setAttribute("complaintBeanList", allComplaints.get());
+                req.getRequestDispatcher("/view/adminDashboard.jsp").forward(req, resp);
+
+            }else {
+                if ("edit".equalsIgnoreCase(action)) {
+                    String complaintId = req.getParameter("id");
+                    if (complaintId != null) {
+                        Optional<ComplaintBean> complaint = complaintDao.getComplaint(complaintId);
+                        if (complaint.isEmpty()) {
+                            req.setAttribute("message", "Invalid complaint id");
+                            req.getRequestDispatcher("/view/employeeDashBoard.jsp").forward(req, resp);
+                            return;
+                        }
+                        req.setAttribute("complaint", complaint.get());  // pass actual ComplaintBean object
+                    }
+                }
+
+                Optional<List<ComplaintBean>> complaintBeanList = complaintDao.getComplaintByEmployeeId(userBean.getId());
+                if (complaintBeanList.isPresent()) {
+                    req.setAttribute("complaintBeanList", complaintBeanList.get());
+                } else {
+                    req.setAttribute("complaintBeanList", null);
+                }
+
+                req.getRequestDispatcher("/view/employeeDashBoard.jsp").forward(req, resp);
             }
 
-            Optional<List<ComplaintBean>> complaintBeanList = complaintDao.getComplaintByEmployeeId(userBean.getId());
-            if (complaintBeanList.isPresent()) {
-                req.setAttribute("complaintBeanList", complaintBeanList.get());
-            } else {
-                req.setAttribute("complaintBeanList", null);
-            }
-
-            req.getRequestDispatcher("/view/employeeDashBoard.jsp").forward(req, resp);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
