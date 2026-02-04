@@ -55,6 +55,7 @@
                         title="Please enter a valid name. Only letters, spaces, and optional dots are allowed."
                         id="fullName"
                         name="fullName"
+                        autocomplete="off"
                         required
                         class="w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200"
                         placeholder="John Doe"
@@ -67,6 +68,7 @@
                         type="email"
                         id="email"
                         name="email"
+                        autocomplete="off"
                         required
                         class="w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200"
                         placeholder="john@example.com"
@@ -83,6 +85,7 @@
                         type="text"
                         id="username"
                         name="username"
+                        autocomplete="off"
                         required
                         class="w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200"
                         placeholder="johndoe123"

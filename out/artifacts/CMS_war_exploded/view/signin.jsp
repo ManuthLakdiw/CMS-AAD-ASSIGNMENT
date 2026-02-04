@@ -49,6 +49,7 @@
                         type="text"
                         id="username"
                         name="username"
+                        autocomplete="off"
                         required
                         class="w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200"
                         placeholder="johndoe123"
@@ -61,6 +62,7 @@
                         type="password"
                         id="password"
                         name="password"
+                        autocomplete="off"
                         required
                         class="w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none transition duration-200"
                         placeholder="••••••••"
